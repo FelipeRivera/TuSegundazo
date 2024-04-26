@@ -11,14 +11,27 @@ export class CarListComponent implements OnInit {
 
   constructor(private carService: CarService) { }
   cars: Array<Car> = [];
+  brandCount: Record<string, number> = {};
 
   getCars() {
     this.carService.getCars().subscribe({
       next: (cars) => {
         this.cars = cars;
+        this.getBrandCount()
       },
       error: (error) => {
         console.error('There was an error:', error)
+      }
+    });
+  }
+
+  getBrandCount() {
+    this.cars.forEach((car) => {
+      const brand = car.marca;
+      if (brand in this.brandCount) {
+        this.brandCount[brand]++;
+      } else {
+        this.brandCount[brand] = 1
       }
     });
   }
